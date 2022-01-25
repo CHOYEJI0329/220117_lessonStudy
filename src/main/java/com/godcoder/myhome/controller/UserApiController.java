@@ -3,6 +3,7 @@ package com.godcoder.myhome.controller;
 import com.godcoder.myhome.model.Board;
 import com.godcoder.myhome.model.User;
 import com.godcoder.myhome.repository.UserRepository;
+import com.querydsl.core.types.Predicate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,11 +22,23 @@ class UserApiController {
     // Aggregate root
     // tag::get-aggregate-root[]
     @GetMapping("/user")
-    List<User> all() {
+    List<User> all(@RequestParam(required = false) String method, @RequestParam(required = false) String text) {
         List<User> users = repository.findAll();
-        log.debug("getBoards().size() 호출전");
-        log.debug("getBoards().size() : {}", users.get(0).getBoards().size());
-        log.debug("getBoards().size() 호출후");
+        if("query".equals(method)) {
+            users = repository.findByUsernameQuery(text);
+        }else if("nativeQuery".equals(method)) {
+            users = repository.findByUsernameNativeQuery(text);
+        }else if("querydsl".equals(method)){
+//            QUser이 import 안돼서 이부분 안됨. querydsl부분
+           /*QUser customer = Quser.customer;
+            Predicate predicate = user.username.contains(text);
+
+            userRepository.findAll(predicate);*/
+        }else if("querydslCustom".equals(method)){
+            users = repository.findByUsernameCustom(text);
+        }else{
+            users = repository.findAll();
+        }
         return users;
     }
     // end::get-aggregate-root[]

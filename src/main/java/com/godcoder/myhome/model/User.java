@@ -34,7 +34,7 @@ public class User {
 
 //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = false)   // orphanRemoval 작성자가 같을 경우 파라미터 보내는 데이터 빼고는 다 지우는 속성. 위험하니 default값인 false로 해두자.
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-//    @JsonIgnore
+    @JsonIgnore
     private List<Board> boards = new ArrayList<>();
 
 }
